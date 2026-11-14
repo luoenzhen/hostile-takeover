@@ -159,6 +159,7 @@ IPhoneAppDelegate *g_appDelegate;
 {
     // Create the window and view
    
+    NSLog(@"WI application launching");
     wi::g_appDelegate = self;
     m_fExiting = false;
 
@@ -513,7 +514,8 @@ void IPhone::InitiateWebView(const char *title, const char *url) {
 void IPhone::GameThreadStart(void *pv) {
     NSLog(@"Starting game...");
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-    wi::GameMain(""); 
+    wi::GameMain("");
+    NSLog(@"WI game thread returned"); 
     [pool release];
 }
 

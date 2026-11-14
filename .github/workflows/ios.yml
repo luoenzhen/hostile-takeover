@@ -10,6 +10,10 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v6
+      - name: Hide superseded unverified preview
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release edit ios-3 --draft || true
       - name: Test edge-aware image scaling
         run: |
           clang++ -std=c++11 -fsanitize=address,undefined tests/hdscale_test.cpp -o /tmp/hdscale-test

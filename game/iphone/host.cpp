@@ -252,7 +252,7 @@ bool HostGetEvent(Event *pevt, long ctWait)
 
 void HostOutputDebugString(char *pszFormat, ...)
 {
-#ifdef DEBUG
+#if defined(DEBUG) || defined(SIMULATOR)
     va_list va;
     va_start(va, pszFormat);
     IPhone::Log(pszFormat, va);
