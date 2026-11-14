@@ -15,14 +15,19 @@ DEVICE=$(xcrun simctl list devices available -j | python3 -c 'import sys,json; d
 timed xcrun simctl boot "$DEVICE"
 timed xcrun simctl bootstatus "$DEVICE" -b
 timed xcrun simctl install "$DEVICE" build-simulator/Distribution-iphonesimulator/wi.app
+export SIMCTL_CHILD_WI_CAPTURE_STARTUP=1
 LAUNCH=$(timed xcrun simctl launch --stdout="$PWD/validation/app-stdout.log" --stderr="$PWD/validation/app-stderr.log" "$DEVICE" com.luoenzhen.warfare)
 printf '%s\n' "$LAUNCH"
 PID=${LAUNCH##*: }
 trap 'xcrun simctl spawn "$DEVICE" log show --last 5m --style compact --predicate '\''process == "wi"'\'' > validation/app-system.log 2>&1 || true' EXIT
+APP_DATA=$(xcrun simctl get_app_container "$DEVICE" com.luoenzhen.warfare data)
 VISIBLE=0
 for attempt in 1 2 3; do
   sleep 30
   timed xcrun simctl io "$DEVICE" screenshot validation/iphone-launch.png
+  if [[ -f "$APP_DATA/tmp/wi-startup.png" ]]; then
+    cp "$APP_DATA/tmp/wi-startup.png" validation/iphone-app-view.png
+  fi
   if swift scripts/check_screenshot.swift validation/iphone-launch.png; then
     VISIBLE=1
     break

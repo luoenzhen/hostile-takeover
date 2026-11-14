@@ -70,10 +70,10 @@
     CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
     
     bmCtx_ = CGBitmapContextCreate(pb_, w, h, 8, w * 4, colorSpace,
-            kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrderDefault);
+            kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Big);
     hdPixels_ = (unsigned char *)calloc(w * h * 16, 1);
     hdCtx_ = CGBitmapContextCreate(hdPixels_, w*2, h*2, 8, w*8, colorSpace,
-            kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrderDefault);
+            kCGImageAlphaPremultipliedFirst | kCGBitmapByteOrder32Big);
     CGColorSpaceRelease(colorSpace);
     
     tmFlip_ = CGAffineTransformMake(1.0f, 0.0f, 0.0f, -1.0f, 0.0f, h);
@@ -186,6 +186,18 @@
                 if (pixel[1] || pixel[2] || pixel[3]) {
                     NSLog(@"WI game frame contains color; image=%d", image_ != NULL);
                     loggedVisibleFrame = true;
+                    if (getenv("WI_CAPTURE_STARTUP") != NULL) {
+                        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 3 * NSEC_PER_SEC),
+                                       dispatch_get_main_queue(), ^{
+                            UIGraphicsImageRenderer *renderer = [[[UIGraphicsImageRenderer alloc]
+                                initWithBounds:self.bounds] autorelease];
+                            UIImage *snapshot = [renderer imageWithActions:^(UIGraphicsImageRendererContext *context) {
+                                [self.layer renderInContext:context.CGContext];
+                            }];
+                            NSString *path = [NSHomeDirectory() stringByAppendingPathComponent:@"tmp/wi-startup.png"];
+                            [UIImagePNGRepresentation(snapshot) writeToFile:path atomically:YES];
+                        });
+                    }
                     break;
                 }
             }
@@ -265,10 +277,10 @@
     if (pbm_ != NULL) {
         // 8->8888 mapping table. 3x faster than 555 format even though it is
         // converted to 565 for display.
-        dword mp8bpp32bpp[256];
+        dword mp8bpp32bpp[256] = {};
         for (int n = 0; n < BigWord(ppal->cEntries); n++) {
             byte *pb = (byte *)&mp8bpp32bpp[n];
-            *pb++ = 0;
+            *pb++ = 255;
             *pb++ = ppal->argb[n][0];
             *pb++ = ppal->argb[n][1];
             *pb++ = ppal->argb[n][2];
