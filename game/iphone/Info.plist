@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Hostile Takeover</string>
+	<string>Warfare HD</string>
 	<key>CFBundleExecutable</key>
 	<string>wi</string>
 	<key>CFBundleIcons~ipad</key>
@@ -15,29 +15,28 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Hostile Takeover</string>
+	<string>Warfare HD</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.6</string>
+	<string>2.0</string>
 	<key>CFBundleSignature</key>
 	<string>HTAK</string>
 	<key>CFBundleVersion</key>
-	<string>1.6.7</string>
+	<string>2</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
     </dict>
-	<key>UIApplicationExitsOnSuspend</key>
-	<true/>
 	<key>UIPrerenderedIcon</key>
-	<true/>
-	<key>UIRequiresPersistentWiFi</key>
 	<true/>
 	<key>UIStatusBarHidden</key>
 	<true/>
 	<key>UISupportedInterfaceOrientations</key>
-	<array/>
+<array><string>UIInterfaceOrientationLandscapeLeft</string><string>UIInterfaceOrientationLandscapeRight</string></array>
+<key>UILaunchScreen</key><dict/>
+<key>UIRequiresFullScreen</key><true/>
+<key>UIRequiredDeviceCapabilities</key><array><string>arm64</string></array>
 </dict>
 </plist>

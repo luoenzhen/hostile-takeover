@@ -17,3 +17,6 @@ release/
 /dist/
 *.log
 __pycache__/
+
+/build-simulator/
+/validation/

@@ -35,6 +35,13 @@ jobs:
             dist/*.ipa
             dist/SHA256SUMS.txt
           if-no-files-found: error
+      - name: Launch on Pro Max simulator
+        run: bash scripts/simulator_smoke.sh
+      - uses: actions/upload-artifact@v6
+        if: always()
+        with:
+          name: iphone-validation
+          path: validation/
       - name: Publish installable download
         env:
           GH_TOKEN: ${{ github.token }}
