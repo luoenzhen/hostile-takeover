@@ -323,6 +323,7 @@ bool Game::Init(int imm)
 		return false;
     }
 
+	HostOutputDebugString("WI loading game data");
 	if (!LoadGameData()) {
         HostOutputDebugString("Game data didn't load.");
 		return false;
@@ -331,6 +332,7 @@ bool Game::Init(int imm)
 	// Init memory manager *after* setting screen mode so we know how much dyn ram is left after
 	// allocating back buffers (potentially from main memory).
 
+	HostOutputDebugString("WI initializing memory manager");
 	if (!InitMemMgr()) {
         HostOutputDebugString("Memory manager didn't initialize.");
 		return false;
@@ -338,6 +340,7 @@ bool Game::Init(int imm)
 
 	// Init cache mgr
 
+	HostOutputDebugString("WI initializing cache");
 	if (!gcam.Init()) {
         HostOutputDebugString("Cache manager didn't initialize.");
 		return false;
@@ -345,6 +348,7 @@ bool Game::Init(int imm)
 
 	// Init mapping tables after mem mgr since it uses mem mgr to store the tables
 
+	HostOutputDebugString("WI initializing coordinate tables");
 	if (!ggame.InitCoordMappingTables()) {
 		HostMessageBox(TEXT("Out of memory, could not initialize game!"));
 		return false;
@@ -352,6 +356,7 @@ bool Game::Init(int imm)
 
 	// Init MultiFormMgr
 
+	HostOutputDebugString("WI initializing forms");
 	if (!InitMultiFormMgr()) {
         HostOutputDebugString("Multi form manager didn't initialize.");
 		return false;
@@ -359,6 +364,7 @@ bool Game::Init(int imm)
 
 	// Initialize the Shell
 
+	HostOutputDebugString("WI initializing shell");
 	if (!gshl.Init()) {
         HostOutputDebugString("Shell didn't initialize.");
 		return false;
@@ -366,16 +372,19 @@ bool Game::Init(int imm)
 
 	// Make Shell palette and shadow map active
 
+	HostOutputDebugString("WI clearing display");
 	ClearDisplay();
 	gshl.SetPalette();
 
 	// Init TBitmapCode
 
+	HostOutputDebugString("WI initializing bitmaps");
 	TBitmap::InitClass();
 	m_wf |= kfGameInitBitmap;
 
 	// Init form / control requirements
 
+	HostOutputDebugString("WI initializing UI controls");
 	ButtonControl::InitClass();
 	CheckBoxControl::InitClass();
 	PipMeterControl::InitClass();
@@ -384,18 +393,21 @@ bool Game::Init(int imm)
 
 	// Save around game.ini
 
+	HostOutputDebugString("WI loading game configuration");
 	gpiniGame = LoadIniFile(gpakr, "game.ini");
 	if (gpiniGame == NULL)
 		return false;
 
 	// Save around the form.ini
 
+	HostOutputDebugString("WI loading forms configuration");
 	gpiniForms = LoadIniFile(gpakr, "forms.ini");
 	if (gpiniForms == NULL)
 		return false;
 
 	// Load fonts
 
+	HostOutputDebugString("WI loading fonts");
 	for (int ifnt = 0; ifnt < kcFonts; ifnt++) {
 		char szProp[2];
 		szProp[0] = ifnt + '0';
@@ -420,6 +432,7 @@ bool Game::Init(int imm)
 
 	// Load string table
 
+	HostOutputDebugString("WI loading strings");
 	gpstrtbl = new StringTable();
 	Assert(gpstrtbl != NULL, "out of memory!");
 	if (gpstrtbl == NULL)
@@ -429,17 +442,21 @@ bool Game::Init(int imm)
 
 	// Init sound system
 
+	HostOutputDebugString("WI initializing audio");
 	gsndm.Init();
 	if (gprefsInit.nVolume != (word)-1)
 		gsndm.SetVolume(gprefsInit.nVolume);
+	HostOutputDebugString("WI enabling audio");
 	gsndm.Enable(true);
 
 	// Clear out stale save games
 
+	HostOutputDebugString("WI checking save games");
 	DeleteStaleSaveGames();
 
 	// We're done with game initialization
 
+	HostOutputDebugString("WI initialization complete");
 	m_wf |= kfGameInitDone;
 
 	return true;

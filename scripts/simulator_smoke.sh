@@ -15,7 +15,9 @@ DEVICE=$(xcrun simctl list devices available -j | python3 -c 'import sys,json; d
 timed xcrun simctl boot "$DEVICE"
 timed xcrun simctl bootstatus "$DEVICE" -b
 timed xcrun simctl install "$DEVICE" build-simulator/Distribution-iphonesimulator/wi.app
-timed xcrun simctl launch --stdout="$PWD/validation/app-stdout.log" --stderr="$PWD/validation/app-stderr.log" "$DEVICE" com.luoenzhen.warfare
+LAUNCH=$(timed xcrun simctl launch --stdout="$PWD/validation/app-stdout.log" --stderr="$PWD/validation/app-stderr.log" "$DEVICE" com.luoenzhen.warfare)
+printf '%s\n' "$LAUNCH"
+PID=${LAUNCH##*: }
 trap 'xcrun simctl spawn "$DEVICE" log show --last 5m --style compact --predicate '\''process == "wi"'\'' > validation/app-system.log 2>&1 || true' EXIT
 VISIBLE=0
 for attempt in 1 2 3; do
@@ -26,6 +28,10 @@ for attempt in 1 2 3; do
     break
   fi
 done
-test "$VISIBLE" = 1
+if [[ "$VISIBLE" != 1 ]]; then
+  /usr/bin/sample "$PID" 3 -file validation/app-stack.txt || true
+  cat validation/app-stdout.log validation/app-stderr.log
+  exit 1
+fi
 # Terminate succeeds only if the app survived startup.
 xcrun simctl terminate "$DEVICE" com.luoenzhen.warfare
