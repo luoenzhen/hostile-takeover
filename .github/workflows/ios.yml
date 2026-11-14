@@ -3,11 +3,15 @@ on:
   push:
     branches: [master]
   workflow_dispatch:
+concurrency:
+  group: iphone-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: write
 jobs:
   build:
     runs-on: macos-15
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v6
       - name: Hide superseded unverified preview
