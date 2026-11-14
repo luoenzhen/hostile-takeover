@@ -18,6 +18,8 @@ jobs:
         run: |
           clang++ -std=c++11 -fsanitize=address,undefined tests/hdscale_test.cpp -o /tmp/hdscale-test
           /tmp/hdscale-test
+      - name: Stamp upstream game-data version
+        run: python3 scripts/stamp_game_data.py
       - name: Build original game for iPhone
         run: |
           set -o pipefail

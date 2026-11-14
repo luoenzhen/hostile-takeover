@@ -18,6 +18,7 @@ def validate(path):
         assert info.get('CFBundleSupportedPlatforms') == ['iPhoneOS'], 'Simulator apps cannot be sideloaded'
         for asset in ('htdata832.pdb', 'htsfx.pdb'):
             assert archive.getinfo(root + asset).file_size > 100_000, f'Missing/incomplete {asset}'
+        assert b'+++VERSION+++' not in archive.read(root + 'htdata832.pdb'), 'Unstamped game database cannot load in release builds'
         assert root + 'OPEN_SOURCE_LICENSE.txt' in names
         print(f'Validated arm64 iPhone IPA: {len(executable):,} executable bytes; full game and audio data included.')
 
