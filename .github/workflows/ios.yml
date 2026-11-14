@@ -10,6 +10,10 @@ jobs:
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v6
+      - name: Test edge-aware image scaling
+        run: |
+          clang++ -std=c++11 -fsanitize=address,undefined tests/hdscale_test.cpp -o /tmp/hdscale-test
+          /tmp/hdscale-test
       - name: Build original game for iPhone
         run: |
           set -o pipefail

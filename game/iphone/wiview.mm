@@ -56,6 +56,23 @@
     [super dealloc];
 }
 
+// Use the same viewport for drawing and touch conversion, including safe areas.
+- (CGRect)gameViewport {
+    CGRect safe = UIEdgeInsetsInsetRect(self.bounds, self.safeAreaInsets);
+    CGFloat scale = MIN(safe.size.width / rect_.size.width,
+                        safe.size.height / rect_.size.height);
+    CGSize size = CGSizeMake(rect_.size.width * scale, rect_.size.height * scale);
+    return CGRectMake(CGRectGetMidX(safe)-size.width/2,
+                      CGRectGetMidY(safe)-size.height/2, size.width, size.height);
+}
+
+- (CGPoint)gamePointForTouch:(UITouch *)touch {
+    CGPoint p = [touch locationInView:self];
+    CGRect viewport = [self gameViewport];
+    return CGPointMake((p.x-viewport.origin.x)*rect_.size.width/viewport.size.width,
+                       (p.y-viewport.origin.y)*rect_.size.height/viewport.size.height);
+}
+
 - (void)setGameThread:(base::Thread *)thread
 {
     game_thread_ = thread;
@@ -125,7 +142,7 @@
         for (int i = 0; i < 2; i++) {
             if (atouch_[i] == NULL) {
                 atouch_[i] = touch;
-                CGPoint point = [touch locationInView: nil];
+                CGPoint point = [self gamePointForTouch:touch];
                 base::Message msg;
                 msg.id = (i == 0) ? kidmMouseDown : kidmMouseDown2;
                 msg.x = (int)point.x;
@@ -151,7 +168,7 @@
         }
         for (int i = 0; i < 2; i++) {
             if (atouch_[i] == touch) {
-                CGPoint point = [touch locationInView: nil];
+                CGPoint point = [self gamePointForTouch:touch];
                 base::Message msg;
                 msg.id = (i == 0) ? kidmMouseMove : kidmMouseMove2;
                 msg.x = (int)point.x;
@@ -179,7 +196,7 @@
         for (int i = 0; i < 2; i++) {
             if (atouch_[i] == touch) {
                 atouch_[i] = NULL;
-                CGPoint point = [touch locationInView: nil];
+                CGPoint point = [self gamePointForTouch:touch];
                 base::Message msg;
                 msg.id = (i == 0) ? kidmMouseUp : kidmMouseUp2;
                 msg.x = (int)point.x;

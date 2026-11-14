@@ -26,11 +26,13 @@
 #else
     CGRect frame = [[UIScreen mainScreen] applicationFrame];
 #endif
+    frame = CGRectMake(0, 0, MAX(frame.size.width, frame.size.height), MIN(frame.size.width, frame.size.height));
     UIView *view = [[CgView alloc] initWithFrame: frame];
     view.autoresizesSubviews = YES;
     view.autoresizingMask = (UIViewAutoresizingFlexibleWidth |
             UIViewAutoresizingFlexibleHeight);
     self.view = view;
+    [view release];
 
 #if 0
     UIButton *button = [UIButton buttonWithType:UIButtonTypeRoundedRect];
@@ -62,6 +64,10 @@
 - (UIInterfaceOrientation)preferredInterfaceOrientationForPresentation {
     return UIInterfaceOrientationLandscapeRight;
 }
+
+- (BOOL)prefersHomeIndicatorAutoHidden { return YES; }
+
+- (UIRectEdge)preferredScreenEdgesDeferringSystemGestures { return UIRectEdgeAll; }
 
 - (BOOL)prefersStatusBarHidden {
     return YES;

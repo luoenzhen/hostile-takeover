@@ -16,6 +16,9 @@
 
 @interface CgView : WiView {
     CGContextRef bmCtx_;
+    CGContextRef hdCtx_;
+    unsigned char *hdPixels_;
+    NSInteger displayMode_;
     wi::CgDib *pbm_;
     CGAffineTransform tmFlip_;
     CGImageRef image_;

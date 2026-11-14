@@ -201,7 +201,7 @@ IPhoneAppDelegate *g_appDelegate;
             [NSString defaultCStringEncoding]];
     m_pszPlatform = (char *)malloc(strlen(pszPlatform) + 1);
     strcpy(m_pszPlatform, pszPlatform);
-	CFRelease(strPlatform);
+    // stringWithFormat returns an autoreleased string.
 
     // Set up a notification to restore sound when interrupted
     [[NSNotificationCenter defaultCenter] addObserver: self
@@ -374,7 +374,7 @@ void IPhone::Log(char *pszFormat, va_list va)
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSString *s = [NSString stringWithCString:sz
             encoding:[NSString defaultCStringEncoding]];
-    NSLog(s);
+    NSLog(@"%@", s);
     [pool release];
 #endif
 }

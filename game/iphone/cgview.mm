@@ -2,6 +2,7 @@
 #import "game/iphone/cgview.h"
 #import "game/iphone/iphone.h"
 #include "base/log.h"
+#include "hdscale.h"
 
 @implementation CgView
 
@@ -9,7 +10,13 @@
 {
     self = [super initWithFrame: rect];
     if (self != nil) {
+        displayMode_ = [[NSUserDefaults standardUserDefaults] objectForKey:@"WIDisplayMode"] ? [[NSUserDefaults standardUserDefaults] integerForKey:@"WIDisplayMode"] : 2;
         [self initGraphics];
+        self.contentScaleFactor = UIScreen.mainScreen.scale;
+        self.backgroundColor = [UIColor blackColor];
+        UITapGestureRecognizer *gesture = [[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(showDisplayOptions)] autorelease];
+        gesture.numberOfTouchesRequired = 3;
+        [self addGestureRecognizer:gesture];
         image_ = NULL;
         arcInvalid_ = NULL;
         crcInvalid_ = 0;
@@ -21,10 +28,12 @@
 - (void)dealloc
 {
 	CGContextRelease(bmCtx_);
+    CGContextRelease(hdCtx_);
+    free(hdPixels_);
     if (image_ != NULL) {
         CGImageRelease(image_);
     }
-    delete arcInvalid_;
+    delete[] arcInvalid_;
     [super dealloc];
 }
 
@@ -38,7 +47,7 @@
     pfrmmInput->GetUpdateMap()->GetMapSize(&sizMap1);
 
     int crcMax = (sizMap0.cx * sizMap0.cy + sizMap1.cx * sizMap1.cy) / 2;
-    delete arcInvalid_;
+    delete[] arcInvalid_;
     arcInvalid_ = new CGRect[crcMax];
     crcInvalid_ = 0;
     crcInvalidMax_ = crcMax;
@@ -62,6 +71,9 @@
     
     bmCtx_ = CGBitmapContextCreate(pb_, w, h, 8, w * 4, colorSpace,
             kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrderDefault);
+    hdPixels_ = (unsigned char *)calloc(w * h * 16, 1);
+    hdCtx_ = CGBitmapContextCreate(hdPixels_, w*2, h*2, 8, w*8, colorSpace,
+            kCGImageAlphaNoneSkipFirst | kCGBitmapByteOrderDefault);
     CGColorSpaceRelease(colorSpace);
     
     tmFlip_ = CGAffineTransformMake(1.0f, 0.0f, 0.0f, -1.0f, 0.0f, h);
@@ -69,26 +81,46 @@
 
 - (void)drawRect:(CGRect)frame
 {
-    // OS 4.0 introduces contentScaleFactor. If this is set to anything other
-    // than 1.0, the OS performs a very slow blt. OS 4.0 defaults it to 2.0
-    // on iPhone 4. Set it back to 1.0 if the selector is present.
-
-    if ([self respondsToSelector:@selector(setContentScaleFactor:)]) {
-        [self setContentScaleFactor: 1.0];
-    }
-
     base::CritScope cs(pcrit_);
 
     if (image_ == NULL) {
         return;
     }
-	CGRect rc = [self bounds];
+	CGRect rc = rect_;
 	CGContextRef ctx = UIGraphicsGetCurrentContext();    
     CGContextSaveGState(ctx);
+    CGRect viewport = [self gameViewport];
+    CGContextTranslateCTM(ctx, viewport.origin.x, viewport.origin.y);
+    CGContextScaleCTM(ctx, viewport.size.width/rect_.size.width, viewport.size.height/rect_.size.height);
+    CGContextSetInterpolationQuality(ctx, displayMode_ == 0 ? kCGInterpolationNone : kCGInterpolationHigh);
     CGContextConcatCTM(ctx, tmFlip_);
 	CGContextDrawImage(ctx, rc, image_);
     [self drawSprites: ctx];
     CGContextRestoreGState(ctx);
+}
+
+- (void)showDisplayOptions {
+    UIAlertController *menu = [UIAlertController alertControllerWithTitle:@"Display quality"
+        message:@"Three-finger tap opens this menu. HD enhances the original art; gameplay is unchanged."
+        preferredStyle:UIAlertControllerStyleActionSheet];
+    NSArray *labels = @[@"Classic pixels", @"Smooth", @"HD edge enhancement"];
+    for (NSInteger i=0; i<3; ++i) {
+        [menu addAction:[UIAlertAction actionWithTitle:[labels objectAtIndex:i] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+            { base::CritScope cs(pcrit_); displayMode_ = i; }
+            [[NSUserDefaults standardUserDefaults] setInteger:i forKey:@"WIDisplayMode"];
+            [self setNeedsDisplay];
+        }]];
+    }
+    [menu addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil]];
+    menu.popoverPresentationController.sourceView = self;
+    menu.popoverPresentationController.sourceRect = CGRectMake(CGRectGetMidX(self.bounds), CGRectGetMidY(self.bounds), 1, 1);
+    [self.window.rootViewController presentViewController:menu animated:YES completion:nil];
+}
+
+- (void)layoutSubviews {
+    [super layoutSubviews];
+    self.contentScaleFactor = self.window.screen ? self.window.screen.scale : UIScreen.mainScreen.scale;
+    [self setNeedsDisplay];
 }
 
 - (void)frameStart
@@ -125,7 +157,12 @@
             CGImageRelease(image_);
             image_ = NULL;
         }
-        image_ = CGBitmapContextCreateImage(bmCtx_);
+        if (displayMode_ == 2 && hdCtx_ != NULL) {
+            WIUpscale2x((const uint32_t *)pb_, (uint32_t *)hdPixels_, (int)rect_.size.width, (int)rect_.size.height);
+            image_ = CGBitmapContextCreateImage(hdCtx_);
+        } else {
+            image_ = CGBitmapContextCreateImage(bmCtx_);
+        }
         fImageChanged = true;
     }
 

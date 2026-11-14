@@ -35,6 +35,8 @@ class SpriteManagerAdapter;
     bool fSpriteDirty_;
     wi::Point aptLast_[2];
 }
+- (CGRect)gameViewport;
+- (CGPoint)gamePointForTouch:(UITouch *)touch;
 - (id)initWithFrame:(CGRect)rect;
 - (void)dealloc;
 - (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event;
