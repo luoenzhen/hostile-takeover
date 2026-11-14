@@ -1,3 +1,7 @@
+## Modern iPhone build
+
+See [iPhone build, validation status, graphics modes and AltStore installation](README-IOS.md). This unofficial port retains the original engine and bundled content. Native online services are not configured.
+
 ## About
 
 *Hostile Takeover* is the open source release of the wildly popular mobile Real Time Strategy game [*Warfare Incorporated*](http://www.warfareincorporated.com/). Warfare Incorporated's developers, grateful for all the contributions of the open source community, are delighted to give something back.

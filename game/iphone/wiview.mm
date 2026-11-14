@@ -141,6 +141,7 @@
         }
         for (int i = 0; i < 2; i++) {
             if (atouch_[i] == NULL) {
+                if (!CGRectContainsPoint([self gameViewport], [touch locationInView:self])) continue;
                 atouch_[i] = touch;
                 CGPoint point = [self gamePointForTouch:touch];
                 base::Message msg;

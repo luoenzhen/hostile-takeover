@@ -181,12 +181,14 @@ void GameMain(char *pszCmds)
 	InitDebugHelpers();
 #endif
 
+    HostOutputDebugString("WI initializing host");
     if (!HostInit()) {
         return;
     }
 
   	while (true) {
 		if (!ggame.Init(imm)) {
+            HostOutputDebugString("WI game initialization failed");
 			ggame.Exit();
 			return;
 		}
@@ -263,6 +265,7 @@ Game::~Game()
 
 bool Game::Init(int imm)
 {
+    HostOutputDebugString("WI starting game initialization");
 	// Haven't initialized yet
 
 	m_wf &= ~kfGameInitDone;

@@ -371,6 +371,7 @@ void IPhone::Log(char *pszFormat, va_list va)
 
 #ifdef SIMULATOR
     printf("%s\n", sz);
+    fflush(stdout);
 #else
     NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
     NSString *s = [NSString stringWithCString:sz

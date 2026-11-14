@@ -99,6 +99,16 @@
     CGContextRestoreGState(ctx);
 }
 
+- (void)refreshFrameImage {
+    if (image_ != NULL) { CGImageRelease(image_); image_ = NULL; }
+    if (displayMode_ == 2 && hdCtx_ != NULL) {
+        WIUpscale2x((const uint32_t *)pb_, (uint32_t *)hdPixels_, (int)rect_.size.width, (int)rect_.size.height);
+        image_ = CGBitmapContextCreateImage(hdCtx_);
+    } else {
+        image_ = CGBitmapContextCreateImage(bmCtx_);
+    }
+}
+
 - (void)showDisplayOptions {
     UIAlertController *menu = [UIAlertController alertControllerWithTitle:@"Display quality"
         message:@"Three-finger tap opens this menu. HD enhances the original art; gameplay is unchanged."
@@ -106,7 +116,7 @@
     NSArray *labels = @[@"Classic pixels", @"Smooth", @"HD edge enhancement"];
     for (NSInteger i=0; i<3; ++i) {
         [menu addAction:[UIAlertAction actionWithTitle:[labels objectAtIndex:i] style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
-            { base::CritScope cs(pcrit_); displayMode_ = i; }
+            { base::CritScope cs(pcrit_); displayMode_ = i; [self refreshFrameImage]; }
             [[NSUserDefaults standardUserDefaults] setInteger:i forKey:@"WIDisplayMode"];
             [self setNeedsDisplay];
         }]];
@@ -153,16 +163,7 @@
     // Sprites may have changes, or front dib may have changed, or neither.
     bool fImageChanged = false;
     if (pbm_->HasChanged()) {
-        if (image_ != NULL) {
-            CGImageRelease(image_);
-            image_ = NULL;
-        }
-        if (displayMode_ == 2 && hdCtx_ != NULL) {
-            WIUpscale2x((const uint32_t *)pb_, (uint32_t *)hdPixels_, (int)rect_.size.width, (int)rect_.size.height);
-            image_ = CGBitmapContextCreateImage(hdCtx_);
-        } else {
-            image_ = CGBitmapContextCreateImage(bmCtx_);
-        }
+        [self refreshFrameImage];
         fImageChanged = true;
     }
 
