@@ -418,7 +418,7 @@
 		C17D66BC0D9E160100CB9F01 /* savegame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = savegame.cpp; path = iphone/savegame.cpp; sourceTree = "<group>"; };
 		C17D66BF0D9E160100CB9F01 /* transportmgr.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = transportmgr.cpp; path = iphone/transportmgr.cpp; sourceTree = "<group>"; };
 		C17D66CC0D9E162500CB9F01 /* htsfx.pdb */ = {isa = PBXFileReference; lastKnownFileType = text; path = htsfx.pdb; sourceTree = "<group>"; };
-		C17D66E40D9E163900CB9F01 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
+		C17D66E40D9E163900CB9F01 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		C17E7A051C3A35BA00B48EDC /* iphonesounddev.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = iphonesounddev.mm; path = iphone/iphonesounddev.mm; sourceTree = "<group>"; };
 		C17E7A071C3A48AA00B48EDC /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		C18E0E020DBAC70700096237 /* oglview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = oglview.h; path = iphone/oglview.h; sourceTree = "<group>"; };
@@ -498,7 +498,7 @@
 		C1DF859E10026655007A26BA /* NavForwardSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = NavForwardSmall.png; path = iphone/NavForwardSmall.png; sourceTree = "<group>"; };
 		C1E3BC640FD998B100E258F3 /* chatter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = chatter.cpp; sourceTree = SOURCE_ROOT; };
 		C1E3BC650FD998B100E258F3 /* chatter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = chatter.h; sourceTree = SOURCE_ROOT; };
-		C1E56FD30DBFE589005DE321 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = ../../../../iPhoneOS.platform/Developer/SDKs/iPhoneOS2.0.sdk/System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
+		C1E56FD30DBFE589005DE321 /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
 		C1E570AB0DBFEAA7005DE321 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		C1EC87C20DDE4A7E00B595FD /* htdata832.pdb */ = {isa = PBXFileReference; lastKnownFileType = text; path = htdata832.pdb; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1215,7 +1215,7 @@
 				GCC_PREFIX_HEADER = "";
 				GCC_VERSION = "";
 				INFOPLIST_FILE = iphone/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-Wno-write-strings";
 				OTHER_CPLUSPLUSFLAGS = (
@@ -1228,12 +1228,12 @@
 					"-DTRACKSTATE",
 				);
 				PREBINDING = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.spiffcode.ht;
+				PRODUCT_BUNDLE_IDENTIFIER = com.luoenzhen.warfare;
 				PRODUCT_NAME = wi;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = arm64;
 			};
 			name = Debug;
 		};
@@ -1254,7 +1254,7 @@
 				GCC_PREFIX_HEADER = "";
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				INFOPLIST_FILE = iphone/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-Wno-write-strings";
 				OTHER_CPLUSPLUSFLAGS = (
@@ -1265,12 +1265,12 @@
 					"-DTRACKSTATE",
 				);
 				PREBINDING = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.spiffcode.ht;
+				PRODUCT_BUNDLE_IDENTIFIER = com.luoenzhen.warfare;
 				PRODUCT_NAME = wi;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = arm64;
 			};
 			name = Release;
 		};
@@ -1288,13 +1288,13 @@
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
 				INFOPLIST_FILE = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				ONLY_ACTIVE_ARCH = YES;
 				PREBINDING = NO;
 				PRECOMPS_INCLUDE_HEADERS_FROM_BUILT_PRODUCTS_DIR = NO;
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = ".. ../inc iphone";
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = arm64;
 			};
 			name = Debug;
 		};
@@ -1310,11 +1310,11 @@
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
 				INFOPLIST_FILE = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PREBINDING = NO;
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = ".. ../inc iphone";
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = arm64;
 			};
 			name = Release;
 		};
@@ -1332,11 +1332,11 @@
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
 				INFOPLIST_FILE = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PREBINDING = NO;
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = ".. ../inc iphone";
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = arm64;
 			};
 			name = Distribution;
 		};
@@ -1359,7 +1359,7 @@
 				GCC_VERSION = "";
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				INFOPLIST_FILE = iphone/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-Wno-write-strings";
 				OTHER_CPLUSPLUSFLAGS = (
@@ -1369,12 +1369,12 @@
 					"-DTRACKSTATE",
 				);
 				PREBINDING = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.spiffcode.ht;
+				PRODUCT_BUNDLE_IDENTIFIER = com.luoenzhen.warfare;
 				PRODUCT_NAME = wi;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = arm64;
 			};
 			name = Distribution;
 		};
@@ -1390,11 +1390,11 @@
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
 				INFOPLIST_FILE = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PREBINDING = NO;
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = ".. ../inc iphone";
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = arm64;
 			};
 			name = "Distribution-store";
 		};
@@ -1416,7 +1416,7 @@
 				GCC_VERSION = "";
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				INFOPLIST_FILE = iphone/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CFLAGS = "-Wno-write-strings";
 				OTHER_CPLUSPLUSFLAGS = (
@@ -1426,11 +1426,11 @@
 					"-DTRACKSTATE",
 				);
 				PREBINDING = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.spiffcode.ht;
+				PRODUCT_BUNDLE_IDENTIFIER = com.luoenzhen.warfare;
 				PRODUCT_NAME = wi;
 				PROVISIONING_PROFILE = "";
 				SDKROOT = iphoneos;
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = arm64;
 			};
 			name = "Distribution-store";
 		};
@@ -1446,11 +1446,11 @@
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				INFOPLIST_EXPAND_BUILD_SETTINGS = YES;
 				INFOPLIST_FILE = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				PREBINDING = NO;
 				SDKROOT = iphoneos;
 				USER_HEADER_SEARCH_PATHS = ".. ../inc iphone";
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = arm64;
 			};
 			name = AdHoc;
 		};
@@ -1471,7 +1471,7 @@
 				GCC_PREFIX_HEADER = "";
 				GCC_WARN_UNUSED_VARIABLE = NO;
 				INFOPLIST_FILE = iphone/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				ONLY_ACTIVE_ARCH = NO;
 				OTHER_CPLUSPLUSFLAGS = (
 					"$(OTHER_CFLAGS)",
@@ -1479,12 +1479,12 @@
 					"-DDEV_BUILD",
 				);
 				PREBINDING = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.spiffcode.ht;
+				PRODUCT_BUNDLE_IDENTIFIER = com.luoenzhen.warfare;
 				PRODUCT_NAME = wi;
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
 				SDKROOT = iphoneos;
-				VALID_ARCHS = "arm64 armv7 armv7s";
+				VALID_ARCHS = arm64;
 			};
 			name = AdHoc;
 		};

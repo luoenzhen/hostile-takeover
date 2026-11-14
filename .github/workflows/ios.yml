@@ -1,0 +1,43 @@
+name: iPhone AltStore build
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: macos-15
+    steps:
+      - uses: actions/checkout@v6
+      - name: Build original game for iPhone
+        run: |
+          set -o pipefail
+          xcodebuild -project game/wi.xcodeproj -target wi -configuration Distribution -sdk iphoneos ARCHS=arm64 ONLY_ACTIVE_ARCH=NO CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO CODE_SIGN_IDENTITY= IPHONEOS_DEPLOYMENT_TARGET=15.0 CLANG_CXX_LANGUAGE_STANDARD=gnu++11 CLANG_CXX_LIBRARY=libc++ ENABLE_BITCODE=NO SYMROOT="$PWD/build" build 2>&1 | tee build.log
+      - name: Package and validate IPA
+        run: |
+          mkdir -p dist/Payload
+          ditto build/Distribution-iphoneos/wi.app dist/Payload/wi.app
+          cp LICENSE.txt dist/Payload/wi.app/OPEN_SOURCE_LICENSE.txt
+          cd dist
+          /usr/bin/zip -qry Warfare-Incorporated-iOS.ipa Payload
+          cd ..
+          python3 scripts/validate_ipa.py dist/Warfare-Incorporated-iOS.ipa
+          shasum -a 256 dist/Warfare-Incorporated-iOS.ipa > dist/SHA256SUMS.txt
+      - uses: actions/upload-artifact@v6
+        with:
+          name: Warfare-Incorporated-iOS
+          path: |
+            dist/*.ipa
+            dist/SHA256SUMS.txt
+          if-no-files-found: error
+      - name: Publish installable download
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create "ios-${{ github.run_number }}" dist/*.ipa dist/SHA256SUMS.txt --title "iPhone build ${{ github.run_number }}" --notes "Unofficial original-engine iPhone build. Unsigned IPA for AltStore Classic. Extract only the Actions ZIP, never the IPA. Physical-device testing required. Original Spiffcode BSD license included."
+      - uses: actions/upload-artifact@v6
+        if: failure()
+        with:
+          name: ios-build-log
+          path: build.log
