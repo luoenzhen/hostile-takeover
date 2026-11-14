@@ -83,6 +83,17 @@
 {
     base::CritScope cs(pcrit_);
 
+#ifdef SIMULATOR
+    static bool loggedBlankDraw = false;
+    static bool loggedGameDraw = false;
+    bool &logged = image_ != NULL ? loggedGameDraw : loggedBlankDraw;
+    if (!logged) {
+        NSLog(@"WI draw image=%d bounds=%@ viewport=%@ window=%d", image_ != NULL,
+              NSStringFromCGRect(self.bounds), NSStringFromCGRect([self gameViewport]),
+              self.window != nil);
+        logged = true;
+    }
+#endif
     if (image_ == NULL) {
         return;
     }
@@ -165,6 +176,21 @@
     if (pbm_->HasChanged()) {
         [self refreshFrameImage];
         fImageChanged = true;
+#ifdef SIMULATOR
+        // Record the first frame that contains game art.
+        static bool loggedVisibleFrame = false;
+        if (!loggedVisibleFrame) {
+            const size_t pixelCount = (size_t)rect_.size.width * rect_.size.height;
+            for (size_t index = 0; index < pixelCount; ++index) {
+                const unsigned char *pixel = pb_ + index * 4;
+                if (pixel[1] || pixel[2] || pixel[3]) {
+                    NSLog(@"WI game frame contains color; image=%d", image_ != NULL);
+                    loggedVisibleFrame = true;
+                    break;
+                }
+            }
+        }
+#endif
     }
 
     bool fSpriteChanged = false;
@@ -185,8 +211,7 @@
         [self performSelectorOnMainThread:@selector(invalidate)
                 withObject:nil waitUntilDone: NO];
 #else
-        [self performSelectorOnMainThread:@selector(setNeedsDisplay)
-                withObject:nil waitUntilDone: NO];
+        dispatch_async(dispatch_get_main_queue(), ^{ [self setNeedsDisplay]; });
 #endif
         pcrit_->Leave();
         return;
@@ -220,8 +245,7 @@
         [self performSelectorOnMainThread:@selector(invalidate)
                 withObject:nil waitUntilDone: NO];
 #else
-        [self performSelectorOnMainThread:@selector(setNeedsDisplay)
-                withObject:nil waitUntilDone: NO];
+        dispatch_async(dispatch_get_main_queue(), ^{ [self setNeedsDisplay]; });
 #endif
         pcrit_->Leave();
         return;

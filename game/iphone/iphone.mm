@@ -36,6 +36,7 @@
     char *m_pszUUID;
 	char *m_pszPlatform;
 }
+@property(nonatomic, retain) UIWindow *window;
 @end
 
 namespace wi {
@@ -43,6 +44,7 @@ IPhoneAppDelegate *g_appDelegate;
 }
 
 @implementation IPhoneAppDelegate
+@synthesize window = m_window;
 
 + (void)initialize
 {
@@ -178,8 +180,7 @@ IPhoneAppDelegate *g_appDelegate;
     m_vcchat = [[ChatViewController alloc] init:nil parent:m_view];
     m_pchat = NULL;
         
-    // Show the window with table view
-	[m_window addSubview:m_view];
+    // The root view controller manages the game view and its orientation.
     [m_window makeKeyAndVisible];
 
     // Alloc the key directories
